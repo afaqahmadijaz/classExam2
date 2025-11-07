@@ -1,52 +1,47 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
 
         int [] originalArray = {2,5,9,23,50,99,76,89,33,40};
-        System.out.println("This is the original unsorted originalArray: " + Arrays.toString(originalArray));
+        System.out.println("This is the original unsorted Array: " + Arrays.toString(originalArray));
 
-        int splitPoint = 4;
-
-//        int[] firstArray = Arrays.copyOfRange(originalArray, 0, splitPoint);
-//        int[] secondArray = Arrays.copyOfRange(originalArray, splitPoint, originalArray.length);
-
-        int[] firstArray = new int[originalArray.length];
-        int[] secondArray = new int[originalArray.length];
-
-        int count = 0;
-
-        for  (int i = 0; i < originalArray.length; i++) {
-            if (originalArray[i] < originalArray[splitPoint]) {
-                firstArray[i] = originalArray[i];
-            }
-            else{
-                secondArray[count] = originalArray[i];
-                count++;
-            }
-        }
-
-        for (int i = 0; i < firstArray.length; i++) {
-            if (firstArray[i] == 0) {
-                int[] newFirstArray = new int[firstArray.length - 1];
-            }
-        }
-
-        System.out.println("This is the unsorted firstArray: " + Arrays.toString(firstArray));
-        System.out.println("This is the unsorted secondArray: " + Arrays.toString(secondArray));
+        int[] sortedArray = ArraySort(originalArray);
+        System.out.println("This is when the Array is sorted:   " + Arrays.toString(sortedArray));
 
     }
 
-    public void ArraySort(int[] array, int [] firstArray, int [] secondArray, int splitPoint) {
+    public static int[] ArraySort(int[] array) {
         if (array.length == 0){
-            System.out.println("Array is empty");
+            return array;
         }
         else if (array.length == 1){
-            System.out.println("Array is only single element");
+            return array;
         }
-        else {
 
+        int splitPoint = array[array.length/2];
+
+        List<Integer> smaller = new ArrayList<>();
+        List<Integer> larger = new ArrayList<>();
+
+        for (int i : array) {
+            if (i < splitPoint)
+                smaller.add(i);
+            else if (i > splitPoint)
+                larger.add(i);
         }
+
+        int[] sortedSmaller = ArraySort(smaller.stream().mapToInt(Integer::intValue).toArray());
+        int[] sortedLarger = ArraySort(larger.stream().mapToInt(Integer::intValue).toArray());
+
+        int[] result = new int[sortedSmaller.length + 1 + sortedLarger.length];
+        System.arraycopy(sortedSmaller, 0, result, 0, sortedSmaller.length);
+        result[sortedSmaller.length] = splitPoint;
+        System.arraycopy(sortedLarger, 0, result, sortedSmaller.length + 1, sortedLarger.length);
+
+        return result;
     }
 
 }
